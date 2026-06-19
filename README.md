@@ -44,9 +44,13 @@ Powered by live tournament data, this project transforms raw match information i
 
 Match data is provided by the OpenFootball World Cup repository, ensuring continuously updated tournament information.
 
+https://github.com/openfootball/worldcup.json/blob/master/2026/worldcup.json
+
 ## 📸 Preview
 
 Follow every goal, every group battle, and every knockout clash through an immersive dashboard designed for football fans.
+
+https://imaginative-pony-3fd4d8.netlify.app/
 
 ---
 
