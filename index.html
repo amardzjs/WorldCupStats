@@ -410,6 +410,68 @@ table{max-width:100%}
 .b-num{font-size:10px;color:var(--text3);background:rgba(255,255,255,0.05);padding:2px 7px;border-radius:4px;white-space:nowrap;align-self:flex-start;flex-shrink:0}
 
 /* ═══════════════════════════════════════════
+   BRACKET TREE — SVG-connected tournament view
+═══════════════════════════════════════════ */
+.bracket-toggle-row{display:flex;justify-content:flex-end;margin-bottom:14px}
+.bv-toggle{display:flex;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:20px;padding:3px;gap:2px}
+.bv-btn{padding:6px 14px;border-radius:18px;border:none;background:none;color:var(--text2);font-size:11.5px;font-weight:600;transition:var(--tr);display:flex;align-items:center;gap:6px}
+.bv-btn.active{background:var(--cyan-lo);color:var(--cyan)}
+.bv-btn i{font-size:14px}
+
+.bracket-tree-outer{
+  background:linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));
+  border:1px solid var(--border);border-radius:var(--r);
+  overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+  padding:24px 16px;position:relative;
+}
+.bracket-tree-outer::-webkit-scrollbar{height:8px}
+.bracket-tree{position:relative;display:flex;gap:64px;min-height:200px}
+.bt-col{display:flex;flex-direction:column;justify-content:space-around;flex-shrink:0;width:188px;position:relative;z-index:2}
+.bt-col-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--cyan);text-align:center;margin-bottom:14px;position:absolute;top:-30px;left:0;right:0;
+}
+.bt-match{
+  background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));
+  border:1px solid var(--border2);border-radius:10px;
+  padding:8px 10px;margin:8px 0;position:relative;
+  transition:var(--tr);cursor:default;
+  opacity:0;animation:btFadeIn .5s ease forwards;
+}
+@keyframes btFadeIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.bt-match:hover{border-color:rgba(0,229,255,0.4);box-shadow:0 0 16px rgba(0,229,255,0.15);transform:translateY(-1px)}
+.bt-match.winner-known{border-color:rgba(16,185,129,0.3)}
+.bt-row{display:flex;align-items:center;gap:6px;padding:3px 0;min-width:0}
+.bt-row .flag-box{width:18px;height:18px;flex-shrink:0}
+.bt-row .bt-name{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;color:var(--text2)}
+.bt-row.bt-winner .bt-name{color:var(--text);font-weight:800}
+.bt-row.bt-winner{position:relative}
+.bt-row.bt-winner::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.bt-score{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--text);flex-shrink:0;min-width:16px;text-align:center}
+.bt-vs-line{height:1px;background:var(--border2);margin:2px 0}
+.bt-meta{font-size:8.5px;color:var(--text3);text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt-num{position:absolute;top:-7px;right:6px;background:var(--bg2);border:1px solid var(--border2);color:var(--text3);font-size:8.5px;font-weight:700;padding:1px 5px;border-radius:8px}
+.bracket-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.bracket-svg path{
+  fill:none;stroke:rgba(0,229,255,0.25);stroke-width:2;
+  stroke-dasharray:300;stroke-dashoffset:300;
+  animation:btDrawLine 1s ease forwards;
+}
+.bracket-svg path.line-done{stroke:rgba(0,229,255,0.55)}
+@keyframes btDrawLine{to{stroke-dashoffset:0}}
+.bt-champion{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  width:140px;flex-shrink:0;position:relative;z-index:2;
+}
+.bt-champion-trophy{font-size:36px;filter:drop-shadow(0 0 16px rgba(245,158,11,0.5));animation:trophyFloat 2.5s ease-in-out infinite}
+@keyframes trophyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.bt-champion-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-align:center;color:var(--gold)}
+.bt-champion-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+@media(max-width:859px){
+  .bracket-toggle-row{justify-content:center}
+}
+
+/* ═══════════════════════════════════════════
    STATS / CHARTS — fully responsive
 ═══════════════════════════════════════════ */
 .chart-card{background:linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:var(--r);padding:16px;width:100%;overflow:hidden}
@@ -422,6 +484,20 @@ table{max-width:100%}
 .bc-lbl .v{color:var(--text);font-weight:700;flex-shrink:0}
 .bc-bar-bg{height:7px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;width:100%}
 .bc-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--blue));transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+
+/* ── Goal-by-minute heatmap ── */
+.heatmap-wrap{display:flex;align-items:flex-end;gap:6px;height:140px;width:100%;padding-top:8px}
+.heatmap-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0;gap:6px}
+.heatmap-bar{
+  width:100%;max-width:46px;border-radius:6px 6px 3px 3px;
+  background:linear-gradient(180deg,var(--cyan),var(--blue));
+  transition:height 1s cubic-bezier(.4,0,.2,1);position:relative;min-height:3px;
+  box-shadow:0 0 0 rgba(0,229,255,0);
+}
+.heatmap-bar.hot{box-shadow:0 0 16px rgba(0,229,255,0.5)}
+.heatmap-count{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.heatmap-lbl{font-size:9.5px;color:var(--text2);white-space:nowrap;text-align:center}
+.heatmap-pct{font-size:9px;color:var(--text3);margin-top:1px}
 
 /* ═══════════════════════════════════════════
    EMPTY STATES
@@ -888,7 +964,12 @@ function renderTicker(matches){
   const track=document.getElementById('ticker-track');
   if(!done.length){wrap.style.display='none';return;}
   wrap.style.display='flex';
-  const recent=[...done].reverse().slice(0,10);
+  // Sort by actual date+time — JSON array order is by matchday/group, not chronological
+  const recent=[...done].sort((a,b)=>{
+    const da=a.date+' '+(a.time||'00:00');
+    const db=b.date+' '+(b.time||'00:00');
+    return db.localeCompare(da);
+  }).slice(0,10);
   const itemHtml=recent.map(m=>`
     <span class="ticker-item">
       <span class="t-flag">${tickerFlagImg(m.team1)}</span>
@@ -934,7 +1015,15 @@ function goldenBootRaceHtml(scorers){
 function renderOverview(matches,standings,scorers,assists){
   renderTicker(matches);
   const done=matches.filter(isCompleted);
-  const upcoming=matches.filter(m=>!isCompleted(m)).slice(0,4);
+  // Sort chronologically by actual date+time, not JSON array order —
+  // the source JSON groups matches by matchday/group, not strict date order.
+  const byDateAsc=(a,b)=>{
+    const da=a.date+' '+(a.time||'00:00');
+    const db=b.date+' '+(b.time||'00:00');
+    return da.localeCompare(db);
+  };
+  const doneSorted=[...done].sort(byDateAsc);
+  const upcoming=matches.filter(m=>!isCompleted(m)).sort(byDateAsc).slice(0,4);
   const groups=getGroups(matches);
   const total=done.reduce((s,m)=>s+m.score1+m.score2,0);
   const avg=done.length?total/done.length:0;
@@ -1008,7 +1097,7 @@ function renderOverview(matches,standings,scorers,assists){
   if(!done.length){
     h+=`<div class="g-card g-card-p"><div class="empty-state"><div class="empty-icon">🕐</div><div class="empty-title">No results yet</div><div class="empty-sub">Scores appear as the repo updates</div></div></div>`;
   } else {
-    [...done].reverse().slice(0,4).forEach(m=>h+=matchCardHtml(m));
+    [...doneSorted].reverse().slice(0,4).forEach(m=>h+=matchCardHtml(m));
   }
   h+=`</div></div>`;
 
@@ -1187,7 +1276,39 @@ function renderTeamDetail(team,matches,standings){
 ═══════════════════════════════════════════ */
 function renderBracket(matches){
   const ROUNDS=['Round of 32','Round of 16','Quarter-final','Semi-final','Match for third place','Final'];
+  const hasKnockout=ROUNDS.some(r=>matches.some(m=>m.round===r));
   let h=`<div class="notice n-yellow"><i class="ti ti-info-circle"></i> Knockout team placeholders fill in automatically as group stage completes.</div>`;
+
+  if(hasKnockout){
+    h+=`<div class="bracket-toggle-row">
+      <div class="bv-toggle">
+        <button class="bv-btn active" id="bv-tree" onclick="setBracketView('tree')"><i class="ti ti-binary-tree"></i> Tree</button>
+        <button class="bv-btn" id="bv-list" onclick="setBracketView('list')"><i class="ti ti-list"></i> List</button>
+      </div>
+    </div>
+    <div id="bracket-tree-container"></div>
+    <div id="bracket-list-container" style="display:none"></div>`;
+  }
+
+  document.getElementById('tab-bracket').innerHTML=h;
+  if(!hasKnockout)return;
+
+  renderBracketTree(matches);
+  renderBracketList(matches);
+}
+
+window.setBracketView=view=>{
+  document.getElementById('bv-tree').classList.toggle('active',view==='tree');
+  document.getElementById('bv-list').classList.toggle('active',view==='list');
+  document.getElementById('bracket-tree-container').style.display=view==='tree'?'block':'none';
+  document.getElementById('bracket-list-container').style.display=view==='list'?'block':'none';
+  if(view==='tree')setTimeout(drawBracketConnectors,50);
+};
+
+/* ── Accordion list view (original, mobile-friendly fallback) ── */
+function renderBracketList(matches){
+  const ROUNDS=['Round of 32','Round of 16','Quarter-final','Semi-final','Match for third place','Final'];
+  let h='';
   ROUNDS.forEach(round=>{
     const rm=matches.filter(m=>m.round===round);if(!rm.length)return;
     const open=['Final','Semi-final','Match for third place'].includes(round);
@@ -1218,8 +1339,136 @@ function renderBracket(matches){
     });
     h+=`</div></div>`;
   });
-  document.getElementById('tab-bracket').innerHTML=h;
+  document.getElementById('bracket-list-container').innerHTML=h;
 }
+
+/* ── Tree view with SVG connectors ──
+   Each knockout match has a `num`. Later rounds reference earlier
+   matches via team1/team2 = "W"+num (winner of that match number).
+   We use this to draw connector lines and to know which side
+   advances once a match is completed. ──────────────────────── */
+function renderBracketTree(matches){
+  // Bracket only — exclude 3rd place playoff from the main tree (shown separately)
+  const TREE_ROUNDS=['Round of 32','Round of 16','Quarter-final','Semi-final','Final'];
+  const byNum={};
+  matches.forEach(m=>{if(m.num)byNum[m.num]=m;});
+
+  function winnerOf(m){
+    if(!isCompleted(m))return null;
+    return m.score1>m.score2?m.team1:m.score2>m.score1?m.team2:null; // null = draw/unsettled (shouldn't happen in KO)
+  }
+  function resolveTeam(ref,m,isTeam1){
+    // ref like "W73" -> resolve to actual team name if that match is done
+    if(typeof ref==='string'&&/^W\d+$/.test(ref)){
+      const refNum=parseInt(ref.slice(1));
+      const refMatch=byNum[refNum];
+      if(refMatch){
+        const w=winnerOf(refMatch);
+        if(w)return w;
+      }
+      return ref; // still a placeholder
+    }
+    return ref;
+  }
+
+  const cols=TREE_ROUNDS.map(round=>matches.filter(m=>m.round===round).sort((a,b)=>(a.num||0)-(b.num||0)));
+  if(!cols.some(c=>c.length)){
+    document.getElementById('bracket-tree-container').innerHTML=`<div class="empty-state"><div class="empty-icon">🏆</div><div class="empty-title">Bracket not available yet</div></div>`;
+    return;
+  }
+
+  let html=`<div class="bracket-tree-outer"><div class="bracket-tree" id="bt-canvas">`;
+  cols.forEach((colMatches,ci)=>{
+    if(!colMatches.length)return;
+    html+=`<div class="bt-col" data-col="${ci}" style="position:relative">
+      <div class="bt-col-title">${TREE_ROUNDS[ci]}</div>`;
+    colMatches.forEach((m,mi)=>{
+      const done=isCompleted(m);
+      const winner=done?winnerOf(m):null;
+      const t1=resolveTeam(m.team1,m,true);
+      const t2=resolveTeam(m.team2,m,false);
+      const delay=(mi*0.08).toFixed(2);
+      // store raw refs (e.g. "W73") so connectors can be drawn from real data, not guessed pairing
+      const ref1=/^W\d+$/.test(m.team1)?m.team1.slice(1):'';
+      const ref2=/^W\d+$/.test(m.team2)?m.team2.slice(1):'';
+      html+=`<div class="bt-match ${winner?'winner-known':''}" data-num="${m.num||''}" data-col="${ci}" data-row="${mi}" data-ref1="${ref1}" data-ref2="${ref2}" style="animation-delay:${delay}s">
+        ${m.num?`<div class="bt-num">#${m.num}</div>`:''}
+        <div class="bt-row ${winner&&winner===m.team1?'bt-winner':''}">
+          ${flagImg(t1,'sm')}<span class="bt-name">${t1}</span>
+          ${done?`<span class="bt-score">${m.score1}</span>`:''}
+        </div>
+        <div class="bt-vs-line"></div>
+        <div class="bt-row ${winner&&winner===m.team2?'bt-winner':''}">
+          ${flagImg(t2,'sm')}<span class="bt-name">${t2}</span>
+          ${done?`<span class="bt-score">${m.score2}</span>`:''}
+        </div>
+        <div class="bt-meta">${fmtDate(m.date)}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+
+  // Champion column — shows winner of Final if known
+  const finalMatch=matches.find(m=>m.round==='Final');
+  const champion=finalMatch&&isCompleted(finalMatch)?winnerOf(finalMatch):null;
+  html+=`<div class="bt-champion">
+    <div class="bt-champion-trophy">${champion?'🏆':'🏆'}</div>
+    <div class="bt-champion-name">${champion||'TBD'}</div>
+    <div class="bt-champion-lbl">${champion?'Champion':'World Champion'}</div>
+  </div>`;
+
+  html+=`<svg class="bracket-svg" id="bracket-svg"></svg></div></div>`;
+  document.getElementById('bracket-tree-container').innerHTML=html;
+
+  setTimeout(drawBracketConnectors,80);
+  window.addEventListener('resize',debounceDrawBracket);
+}
+
+let bracketResizeTimer=null;
+function debounceDrawBracket(){
+  clearTimeout(bracketResizeTimer);
+  bracketResizeTimer=setTimeout(drawBracketConnectors,150);
+}
+
+function drawBracketConnectors(){
+  const canvas=document.getElementById('bt-canvas');
+  const svg=document.getElementById('bracket-svg');
+  if(!canvas||!svg)return;
+  const canvasRect=canvas.getBoundingClientRect();
+  svg.setAttribute('width',canvas.scrollWidth);
+  svg.setAttribute('height',canvas.scrollHeight);
+  svg.style.width=canvas.scrollWidth+'px';
+  svg.style.height=canvas.scrollHeight+'px';
+  svg.innerHTML='';
+
+  const matchEls=[...canvas.querySelectorAll('.bt-match')];
+  const byNumEl={};
+  matchEls.forEach(el=>{const n=el.dataset.num;if(n)byNumEl[n]=el;});
+
+  // Draw a connector for every real W<num> reference found on each match
+  // (data-ref1 / data-ref2 were set from the actual JSON team1/team2 values,
+  // not guessed by position — FIFA's bracket seeding isn't simple pairs).
+  matchEls.forEach(el=>{
+    const targetRect=el.getBoundingClientRect();
+    const targetY=targetRect.top-canvasRect.top+targetRect.height/2;
+    const targetX=targetRect.left-canvasRect.left;
+    const refs=[el.dataset.ref1,el.dataset.ref2].filter(Boolean);
+    refs.forEach(refNum=>{
+      const src=byNumEl[refNum];
+      if(!src)return;
+      const srcRect=src.getBoundingClientRect();
+      const srcY=srcRect.top-canvasRect.top+srcRect.height/2;
+      const srcX=srcRect.right-canvasRect.left;
+      const midX=(srcX+targetX)/2;
+      const isDone=src.classList.contains('winner-known');
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d',`M ${srcX} ${srcY} C ${midX} ${srcY}, ${midX} ${targetY}, ${targetX} ${targetY}`);
+      path.setAttribute('class',isDone?'line-done':'');
+      svg.appendChild(path);
+    });
+  });
+}
+
 window.toggleRound=btn=>{
   btn.classList.toggle('open');
   const body=btn.nextElementSibling;body.classList.toggle('open');
@@ -1251,6 +1500,35 @@ function renderStats(matches,standings,scorers,assists){
     groupGoals[m.group]=(groupGoals[m.group]||0)+m.score1+m.score2;
   });
 
+  // Goals by minute bucket (0-15, 16-30, 31-45, 46-60, 61-75, 76-90+)
+  const minuteBuckets=[
+    {label:'0-15\'',min:0,max:15,count:0},
+    {label:'16-30\'',min:16,max:30,count:0},
+    {label:'31-45\'',min:31,max:45,count:0},
+    {label:'46-60\'',min:46,max:60,count:0},
+    {label:'61-75\'',min:61,max:75,count:0},
+    {label:'76-90+\'',min:76,max:999,count:0},
+  ];
+  done.forEach(m=>{
+    (m.goals||[]).forEach(g=>{
+      const min=parseInt(g.minute)||0;
+      const bucket=minuteBuckets.find(b=>min>=b.min&&min<=b.max);
+      if(bucket)bucket.count++;
+    });
+  });
+  const maxBucket=Math.max(...minuteBuckets.map(b=>b.count),1);
+  const totalGoalsInBuckets=minuteBuckets.reduce((s,b)=>s+b.count,0);
+
+  // Own-goal & penalty trivia counters
+  let ownGoalCount=0,penaltyCount=0;
+  done.forEach(m=>{
+    (m.goals||[]).forEach(g=>{
+      if(g.owngoal)ownGoalCount++;
+      if(g.penalty)penaltyCount++;
+    });
+  });
+  const regularGoalCount=Math.max(0,total-ownGoalCount);
+
   let h=`
   <div class="sec-title"><div class="sec-icon si-cyan"><i class="ti ti-chart-bar"></i></div>Tournament Statistics</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:24px">
@@ -1272,6 +1550,29 @@ function renderStats(matches,standings,scorers,assists){
         <span class="chip c-cyan">${hs.total} goals</span>
       </div>
       ${goalsHtml(m)}
+    </div>`;
+  }
+
+  // Own-goal & penalty trivia
+  if(done.length){
+    h+=`<div class="sec-title"><div class="sec-icon si-purple"><i class="ti ti-flag"></i></div>Quirky Tournament Trivia</div>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="g-card g-card-p" style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:32px;flex-shrink:0">🔴</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">Own Goals</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--red);line-height:1">${ownGoalCount}</div>
+          <div style="font-size:10.5px;color:var(--text3);margin-top:2px">${ownGoalCount?((ownGoalCount/total)*100).toFixed(1)+'% of all goals':'None scored yet'}</div>
+        </div>
+      </div>
+      <div class="g-card g-card-p" style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:32px;flex-shrink:0">🥅</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">Penalties Scored</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--gold);line-height:1">${penaltyCount}</div>
+          <div style="font-size:10.5px;color:var(--text3);margin-top:2px">${penaltyCount?((penaltyCount/total)*100).toFixed(1)+'% of all goals':'None scored yet'}</div>
+        </div>
+      </div>
     </div>`;
   }
 
@@ -1308,6 +1609,31 @@ function renderStats(matches,standings,scorers,assists){
         :`<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">No data yet</div></div>`}
     </div>
   </div></div>`;
+
+  // Goals by minute heatmap — full width
+  h+=`<div style="margin-top:16px">
+    <div class="sec-title"><div class="sec-icon si-gold"><i class="ti ti-clock-bolt"></i></div>Goals by Minute
+      <span style="font-size:11.5px;color:var(--text2);font-weight:400">— when goals are scored most</span>
+    </div>
+    <div class="chart-card">`;
+  if(!totalGoalsInBuckets){
+    h+=`<div class="empty-state"><div class="empty-icon">⏱️</div><div class="empty-title">No data yet</div></div>`;
+  } else {
+    h+=`<div class="heatmap-wrap">`;
+    minuteBuckets.forEach(b=>{
+      const heightPct=Math.max(6,Math.round((b.count/maxBucket)*100));
+      const pct=totalGoalsInBuckets?Math.round((b.count/totalGoalsInBuckets)*100):0;
+      const isHot=b.count===maxBucket&&b.count>0;
+      h+=`<div class="heatmap-col">
+        <div class="heatmap-count">${b.count}</div>
+        <div class="heatmap-bar ${isHot?'hot':''}" style="height:${heightPct}%"></div>
+        <div class="heatmap-lbl">${b.label}</div>
+        <div class="heatmap-pct">${pct}%</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+  h+=`</div></div>`;
 
   h+=`<div class="grid-2" style="margin-top:16px">`;
 
